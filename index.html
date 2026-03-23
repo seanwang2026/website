@@ -699,7 +699,7 @@
         // Coze API 配置
         const COZE_BOT_ID = '7607292705848590377';
         const COZE_PAT_TOKEN = 'pat_Hbl6GRhdFDFMdDrOH4gWe0ZxzVoafR1Sp7taSvNwR3ek2yOgMKTCeM3dYN0bVgaA';
-        const COZE_API_URL = 'https://api.coze.cn/v1/chat';
+        const COZE_API_URL = 'https://api.coze.cn/v1/chat/chat';
         
         // 对话历史（用于上下文）
         let conversationId = null;
@@ -735,25 +735,37 @@
                     },
                     body: JSON.stringify({
                         bot_id: COZE_BOT_ID,
-                        user: 'website_visitor_' + Date.now(),
-                        query: message,
-                        conversation_id: conversationId,
+                        user: 'website_visitor',
+                        conversation_id: conversationId || '',
+                        additional_messages: [{
+                            role: 'user',
+                            content: message,
+                            content_type: 'text'
+                        }],
                         stream: false
                     })
                 });
                 
                 if (!response.ok) {
-                    throw new Error('API 请求失败：' + response.status);
+                    const errorText = await response.text();
+                    console.error('Coze API Error Response:', errorText);
+                    throw new Error('API 请求失败：' + response.status + ' - ' + errorText);
                 }
                 
                 const data = await response.json();
+                console.log('Coze Response:', data);
                 
                 // 保存 conversation_id 用于后续对话
                 if (data.conversation_id) {
                     conversationId = data.conversation_id;
                 }
                 
-                return data;
+                // 提取回复内容
+                if (data.messages && data.messages.length > 0) {
+                    return data.messages[data.messages.length - 1].content;
+                }
+                
+                return data.content || '抱歉，我暂时无法回答这个问题。';
             } catch (error) {
                 console.error('Coze API Error:', error);
                 throw error;
@@ -803,9 +815,8 @@
                 // 移除加载提示
                 loadingDiv.remove();
                 
-                // 显示 AI 回复
-                const reply = data.content || data.messages?.[0]?.content || '抱歉，我暂时无法回答这个问题。';
-                appendMessage(reply, false);
+                // 显示 AI 回复（data 已经是回复内容）
+                appendMessage(data, false);
                 
                 // TODO: 异步存储对话记录到飞书表格
                 // await storeConversation(message, reply);
