@@ -166,7 +166,28 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header-left {
+            display: flex;
+            align-items: center;
             gap: 1rem;
+        }
+
+        .chat-header-clear {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .chat-header-clear:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .bot-avatar {
@@ -456,11 +477,14 @@
         <div class="chat-panel-wrapper">
             <div class="chat-container" id="chat-panel">
             <div class="chat-header">
-                <div class="bot-avatar">🤖</div>
-                <div class="bot-info">
-                    <h3>抖音广告开户助手</h3>
-                    <div class="bot-status">在线</div>
+                <div class="chat-header-left">
+                    <div class="bot-avatar">🤖</div>
+                    <div class="bot-info">
+                        <h3>抖音广告开户助手</h3>
+                        <div class="bot-status">在线</div>
+                    </div>
                 </div>
+                <button class="chat-header-clear" onclick="clearConversation()" title="清除对话历史">🔄 新对话</button>
             </div>
             
             <div class="chat-messages" id="chat-messages">
@@ -509,8 +533,14 @@
         const COZE_API_URL = 'https://api.coze.cn/v3/chat';
         
         // 对话历史（用于上下文）
+        // 注意：每次页面刷新后 conversationId 会重置，开始新对话
+        // 如果需要连续对话，conversationId 会在第一次对话后自动保存
         let conversationId = null;
         let isProcessing = false;
+        
+        // 可选：强制每次都是新对话（不携带历史）
+        // 如果需要连续对话能力，设置为 false
+        const FORCE_NEW_CONVERSATION = false;
         
         // 滚动到聊天窗口
         function scrollToChat() {
@@ -518,6 +548,30 @@
             setTimeout(() => {
                 document.getElementById('chat-input').focus();
             }, 500);
+        }
+        
+        // 清除对话历史
+        function clearConversation() {
+            conversationId = null;
+            // 清空聊天窗口，只保留欢迎消息
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = `
+                <div class="chat-message bot">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        您好！我是抖音广告开户助手，可以帮您：
+                        <br><br>
+                        • 解答开户政策和流程
+                        <br>
+                        • 指导准备资质材料
+                        <br>
+                        • 对接官方认证代理商
+                        <br><br>
+                        有什么可以帮您？😊
+                    </div>
+                </div>
+            `;
+            console.log('对话历史已清除');
         }
         
         // 轮询对话状态直到完成
@@ -595,6 +649,9 @@
         async function sendMessage(message) {
             try {
                 // Step 1: 发起对话
+                // 如果强制新对话，不携带 conversation_id
+                const useConvId = FORCE_NEW_CONVERSATION ? null : conversationId;
+                
                 const response = await fetch(COZE_API_URL, {
                     method: 'POST',
                     headers: {
@@ -604,14 +661,14 @@
                     body: JSON.stringify({
                         bot_id: COZE_BOT_ID,
                         user_id: 'website_visitor',
-                        conversation_id: conversationId || undefined,
+                        conversation_id: useConvId || undefined,
                         additional_messages: [{
                             role: 'user',
                             content: message,
                             content_type: 'text'
                         }],
                         stream: false,
-                        auto_save_history: true
+                        auto_save_history: !FORCE_NEW_CONVERSATION
                     })
                 });
                 
