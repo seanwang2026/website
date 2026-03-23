@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开户资料收集 - TikTok AI 助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Progress Bar */
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: 0;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+        }
+        
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-circle.active {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            animation: pulse 2s infinite;
+        }
+        
+        .progress-circle.completed {
+            background: #00C853;
+        }
+        
+        .progress-label {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 242, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 242, 234, 0);
+            }
+        }
+        
+        /* Form Steps */
+        .form-step {
+            display: none;
+        }
+        
+        .form-step.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .required::after {
+            content: ' *';
+            color: #FE2C55;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00F2EA;
+            box-shadow: 0 0 0 3px rgba(0, 242, 234, 0.1);
+        }
+        
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .radio-option {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .radio-option:hover {
+            border-color: #00F2EA;
+            background: rgba(0, 242, 234, 0.05);
+        }
+        
+        .radio-option input[type="radio"] {
+            display: none;
+        }
+        
+        .radio-option.selected {
+            border-color: #00F2EA;
+            background: rgba(0, 242, 234, 0.1);
+        }
+        
+        .hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .warning {
+            font-size: 0.85rem;
+            color: #FF9800;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .warning::before {
+            content: '⚠️';
+        }
+        
+        /* File Upload */
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .file-upload:hover {
+            border-color: #00F2EA;
+            background: rgba(0, 242, 234, 0.05);
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .file-info {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .file-info.show {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Buttons */
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .btn-secondary {
+            background: white;
+            border: 2px solid #ddd;
+            color: #666;
+        }
+        
+        .btn-secondary:hover {
+            border-color: #999;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 242, 234, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Summary */
+        .summary-section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-section h4 {
+            margin-bottom: 0.5rem;
+            color: #00F2EA;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            color: #666;
+        }
+        
+        .summary-value {
+            font-weight: 600;
+        }
+        
+        .edit-link {
+            color: #00F2EA;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+        
+        /* Success Message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 3rem 0;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .success-message p {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        /* Mobile */
+        @media (max-width: 600px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+            
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .progress-label {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📝 TikTok 广告开户资料收集</h1>
+            <p style="color: #666;">请填写以下信息，我们将自动整理发送至客服</p>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div class="progress">
+            <div class="progress-step">
+                <div class="progress-circle active">1</div>
+                <div class="progress-label">基本信息</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">2</div>
+                <div class="progress-label">业务类型</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">3</div>
+                <div class="progress-label">资质文件</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">4</div>
+                <div class="progress-label">联系信息</div>
+            </div>
+            <div class="progress-step">
+                <div class="progress-circle">5</div>
+                <div class="progress-label">确认提交</div>
+            </div>
+        </div>
+        
+        <!-- Form -->
+        <form id="onboardingForm" onsubmit="handleSubmit(event)">
+            <!-- Step 1: 基本信息 -->
+            <div class="form-step active" data-step="1">
+                <h3 style="margin-bottom: 1.5rem;">基本信息</h3>
+                
+                <div class="form-group">
+                    <label class="required">公司名称</label>
+                    <input type="text" name="companyName" required placeholder="请输入公司全称">
+                    <div class="hint">💡 请填写营业执照上的完整名称</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">公司注册地</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="US" required>
+                            🇺🇸 美国
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="UK" required>
+                            🇬🇧 英国
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="MY" required>
+                            🇲🇾 马来西亚
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="SG" required>
+                            🇸🇬 新加坡
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="CN" required>
+                            🇨🇳 中国
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="country" value="OTHER" required>
+                            其他国家
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">营业执照注册时间</label>
+                    <input type="date" name="registerDate" required>
+                    <div class="warning">公司注册需满 3 个月才能开户</div>
+                </div>
+                
+                <div class="buttons">
+                    <div></div>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(1)">下一步</button>
+                </div>
+            </div>
+            
+            <!-- Step 2: 业务类型 -->
+            <div class="form-step" data-step="2">
+                <h3 style="margin-bottom: 1.5rem;">业务类型</h3>
+                
+                <div class="form-group">
+                    <label class="required">主要推广产品/服务</label>
+                    <input type="text" name="businessType" required placeholder="例如：跨境电商、游戏、应用下载等">
+                </div>
+                
+                <div class="form-group">
+                    <label>独立站/落地页 URL</label>
+                    <input type="text" name="website" placeholder="https://">
+                    <div class="hint">如有多个网站，填写主要的即可</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">月广告预算范围</label>
+                    <select name="budget" required>
+                        <option value="">请选择预算范围</option>
+                        <option value="<5K">< $5,000</option>
+                        <option value="5K-20K">$5,000 - $20,000</option>
+                        <option value="20K-50K">$20,000 - $50,000</option>
+                        <option value="50K-100K">$50,000 - $100,000</option>
+                        <option value=">100K">> $100,000</option>
+                    </select>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(2)">上一步</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">下一步</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: 资质文件 -->
+            <div class="form-step" data-step="3">
+                <h3 style="margin-bottom: 1.5rem;">资质文件上传</h3>
+                
+                <div class="form-group">
+                    <label class="required">营业执照</label>
+                    <div class="file-upload" onclick="document.getElementById('licenseFile').click()">
+                        <div class="file-upload-icon">📷</div>
+                        <div>点击上传或拖拽文件到这里</div>
+                        <div class="hint">支持 JPG/PNG/PDF，最大 10MB</div>
+                    </div>
+                    <input type="file" id="licenseFile" name="license" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" required onchange="handleFileSelect(this, 'licenseInfo')">
+                    <div class="file-info" id="licenseInfo"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">法人身份证/护照</label>
+                    <div class="file-upload" onclick="document.getElementById('idFile').click()">
+                        <div class="file-upload-icon">📷</div>
+                        <div>点击上传或拖拽文件到这里</div>
+                        <div class="hint">支持 JPG/PNG/PDF，最大 10MB</div>
+                    </div>
+                    <input type="file" id="idFile" name="idDocument" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" required onchange="handleFileSelect(this, 'idInfo')">
+                    <div class="file-info" id="idInfo"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label>品牌授权书（可选）</label>
+                    <div class="file-upload" onclick="document.getElementById('authFile').click()">
+                        <div class="file-upload-icon">📷</div>
+                        <div>点击上传或拖拽文件到这里</div>
+                        <div class="hint">如推广涉及品牌，请提供授权书</div>
+                    </div>
+                    <input type="file" id="authFile" name="authDocument" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="handleFileSelect(this, 'authInfo')">
+                    <div class="file-info" id="authInfo"></div>
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">上一步</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(3)">下一步</button>
+                </div>
+            </div>
+            
+            <!-- Step 4: 联系信息 -->
+            <div class="form-step" data-step="4">
+                <h3 style="margin-bottom: 1.5rem;">联系信息</h3>
+                
+                <div class="form-group">
+                    <label class="required">邮箱地址</label>
+                    <input type="email" name="email" required placeholder="your@email.com">
+                </div>
+                
+                <div class="form-group">
+                    <label>WhatsApp/微信（可选）</label>
+                    <input type="text" name="contact" placeholder="+1 234 567 8900 或 微信号">
+                </div>
+                
+                <div class="form-group">
+                    <label class="required">最佳联系时间</label>
+                    <input type="text" name="contactTime" required placeholder="例如：工作日 9AM-6PM PST">
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(4)">上一步</button>
+                    <button type="button" class="btn btn-primary" onclick="nextStep(4)">下一步</button>
+                </div>
+            </div>
+            
+            <!-- Step 5: 确认提交 -->
+            <div class="form-step" data-step="5">
+                <h3 style="margin-bottom: 1.5rem;">确认信息</h3>
+                <p style="color: #666; margin-bottom: 1.5rem;">请核对以下信息，确认无误后提交</p>
+                
+                <div class="summary-section">
+                    <h4>📋 公司信息</h4>
+                    <div class="summary-row">
+                        <span class="summary-label">公司名称</span>
+                        <span class="summary-value" id="summary-company"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">注册地</span>
+                        <span class="summary-value" id="summary-country"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">注册时间</span>
+                        <span class="summary-value" id="summary-date"></span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h4>💼 业务信息</h4>
+                    <div class="summary-row">
+                        <span class="summary-label">业务类型</span>
+                        <span class="summary-value" id="summary-business"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">独立站</span>
+                        <span class="summary-value" id="summary-website"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">月预算</span>
+                        <span class="summary-value" id="summary-budget"></span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h4>📎 已上传文件</h4>
+                    <div class="summary-row">
+                        <span class="summary-label">营业执照</span>
+                        <span class="summary-value" id="summary-license">待上传</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">法人证件</span>
+                        <span class="summary-value" id="summary-id">待上传</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">品牌授权</span>
+                        <span class="summary-value" id="summary-auth">未上传</span>
+                    </div>
+                </div>
+                
+                <div class="summary-section">
+                    <h4>📧 联系信息</h4>
+                    <div class="summary-row">
+                        <span class="summary-label">邮箱</span>
+                        <span class="summary-value" id="summary-email"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">联系方式</span>
+                        <span class="summary-value" id="summary-contact"></span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="summary-label">最佳联系时间</span>
+                        <span class="summary-value" id="summary-contactTime"></span>
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreeTerms" required>
+                    <label for="agreeTerms">我已阅读并同意《隐私政策》和《服务条款》</label>
+                </div>
+                
+                <div class="warning" style="margin-bottom: 1.5rem;">
+                    提交后资料将发送至客服邮箱，24 小时内联系您
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(5)">上一步</button>
+                    <button type="submit" class="btn btn-primary">确认提交</button>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon">✅</div>
+            <h2>提交成功！</h2>
+            <p>我们已收到您的开户申请，客服将在 24 小时内通过以下方式联系您：</p>
+            <p id="successContact" style="font-weight: 600;"></p>
+            <p style="font-size: 0.9rem; color: #999;">等待期间，您可以返回首页浏览政策库和案例</p>
+            <a href="/" class="btn btn-primary">返回首页</a>
+        </div>
+    </div>
+    
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        const uploadedFiles = {};
+        
+        // Radio button selection
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                this.parentElement.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        function nextStep(fromStep) {
+            // Validate current step
+            const currentStepEl = document.querySelector(`.form-step[data-step="${fromStep}"]`);
+            const inputs = currentStepEl.querySelectorAll('input[required], select[required]');
+            let valid = true;
+            
+            inputs.forEach(input => {
+                if (input.type === 'radio') {
+                    const radioGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                    const checked = Array.from(radioGroup).some(r => r.checked);
+                    if (!checked) valid = false;
+                } else if (!input.value.trim()) {
+                    valid = false;
+                    input.style.borderColor = '#FE2C55';
+                }
+            });
+            
+            if (!valid) {
+                alert('请填写所有必填项');
+                return;
+            }
+            
+            // Update progress
+            document.querySelector(`.progress-step:nth-child(${fromStep}) .progress-circle`).classList.add('completed');
+            document.querySelector(`.progress-step:nth-child(${fromStep + 1}) .progress-circle`).classList.add('active');
+            
+            // Show next step
+            currentStepEl.classList.remove('active');
+            document.querySelector(`.form-step[data-step="${fromStep + 1}"]`).classList.add('active');
+            
+            // Update summary if last step
+            if (fromStep === 4) {
+                updateSummary();
+            }
+            
+            currentStep = fromStep + 1;
+        }
+        
+        function prevStep(fromStep) {
+            // Update progress
+            document.querySelector(`.progress-step:nth-child(${fromStep}) .progress-circle`).classList.remove('active');
+            document.querySelector(`.progress-step:nth-child(${fromStep - 1}) .progress-circle`).classList.remove('completed');
+            document.querySelector(`.progress-step:nth-child(${fromStep - 1}) .progress-circle`).classList.add('active');
+            
+            // Show previous step
+            currentStepEl.classList.remove('active');
+            document.querySelector(`.form-step[data-step="${fromStep - 1}"]`).classList.add('active');
+            
+            currentStep = fromStep - 1;
+        }
+        
+        function handleFileSelect(input, infoId) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                
+                const infoEl = document.getElementById(infoId);
+                infoEl.innerHTML = `
+                    <span>✓ ${file.name} (${fileSize}MB)</span>
+                    <span style="color: #00F2EA; cursor: pointer;" onclick="document.getElementById('${input.id}').click()">重新上传</span>
+                `;
+                infoEl.classList.add('show');
+                
+                uploadedFiles[input.name] = file;
+            }
+        }
+        
+        function updateSummary() {
+            const form = document.getElementById('onboardingForm');
+            const formData = new FormData(form);
+            
+            document.getElementById('summary-company').textContent = formData.get('companyName');
+            document.getElementById('summary-country').textContent = formData.get('country');
+            document.getElementById('summary-date').textContent = formData.get('registerDate');
+            document.getElementById('summary-business').textContent = formData.get('businessType');
+            document.getElementById('summary-website').textContent = formData.get('website') || '未填写';
+            document.getElementById('summary-budget').textContent = formData.get('budget');
+            document.getElementById('summary-license').textContent = uploadedFiles['license'] ? '✓ 已上传' : '待上传';
+            document.getElementById('summary-id').textContent = uploadedFiles['idDocument'] ? '✓ 已上传' : '待上传';
+            document.getElementById('summary-auth').textContent = uploadedFiles['authDocument'] ? '✓ 已上传' : '未上传';
+            document.getElementById('summary-email').textContent = formData.get('email');
+            document.getElementById('summary-contact').textContent = formData.get('contact') || '未填写';
+            document.getElementById('summary-contactTime').textContent = formData.get('contactTime');
+        }
+        
+        function handleSubmit(event) {
+            event.preventDefault();
+            
+            // TODO: 实际部署时替换为 Formspree 或其他邮件服务
+            // 这里只是演示
+            alert('这是一个演示。\n\n实际部署时，这里会将数据发送到 Formspree，自动转发邮件到客服邮箱。');
+            
+            // 显示成功消息
+            document.getElementById('onboardingForm').style.display = 'none';
+            document.querySelector('.progress').style.display = 'none';
+            
+            const formData = new FormData(event.target);
+            const email = formData.get('email');
+            document.getElementById('successContact').textContent = '📧 ' + email;
+            
+            document.getElementById('successMessage').classList.add('show');
+            
+            // TODO: 实际部署时在这里发送数据到 Formspree
+            // fetch('https://formspree.io/f/your-form-id', {
+            //     method: 'POST',
+            //     body: formData
+            // });
+        }
+    </script>
+</body>
+</html>

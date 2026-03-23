@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok 广告开户 AI 助手 - 5 分钟完成资料，24 小时极速审核</title>
+    <meta name="description" content="AI 智能引导 TikTok 广告开户，问答式收集资料，自动整理发送至客服。官方认证代理商，1000+ 成功案例。">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        /* Navigation */
+        nav {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: #666;
+        }
+        
+        .nav-links a:hover {
+            color: #00F2EA;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-text p {
+            font-size: 1.25rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #00F2EA;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: 2px solid #00F2EA;
+        }
+        
+        .trust-badges {
+            display: flex;
+            gap: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .trust-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .trust-badge::before {
+            content: "✓";
+            color: #00C853;
+            font-weight: bold;
+        }
+        
+        /* Value Props */
+        .value-props {
+            padding: 4rem 2rem;
+            background: white;
+        }
+        
+        .value-props-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        
+        .value-prop {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 12px;
+            background: #f9f9f9;
+        }
+        
+        .value-prop-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .value-prop h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* How It Works */
+        .how-it-works {
+            padding: 4rem 2rem;
+            background: #f5f5f5;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .steps {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+        
+        .step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+        
+        .step h4 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .step p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* FAQ */
+        .faq {
+            padding: 4rem 2rem;
+            background: white;
+        }
+        
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-item {
+            border-bottom: 1px solid #eee;
+            padding: 1.5rem 0;
+        }
+        
+        .faq-question {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .faq-answer {
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* CTA Section */
+        .cta {
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #121212 0%, #424242 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta p {
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        /* Footer */
+        footer {
+            background: #121212;
+            color: #999;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer a {
+            color: #999;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        
+        /* Chat Button */
+        .chat-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 242, 234, 0.4);
+            z-index: 999;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 242, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 242, 234, 0);
+            }
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .value-props-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">TikTok AI 助手</div>
+            <div class="nav-links">
+                <a href="#how-it-works">流程</a>
+                <a href="#faq">常见问题</a>
+                <a href="#policy">政策库</a>
+                <a href="#" class="btn-primary" onclick="startOnboarding()">开始开户</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>🚀 TikTok 广告开户<br>从未如此简单</h1>
+                <p>AI 智能引导 · 5 分钟完成资料 · 24 小时极速审核</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn-primary" onclick="startChat()">🎯 开始咨询</a>
+                    <a href="#" class="btn-secondary" onclick="startOnboarding()">▶ 直接开户</a>
+                </div>
+                <div class="trust-badges">
+                    <div class="trust-badge">官方认证代理商</div>
+                    <div class="trust-badge">1000+ 成功案例</div>
+                    <div class="trust-badge">7×24 小时服务</div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <!-- Placeholder for AI chat preview -->
+                <div style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00F2EA, #FE2C55);"></div>
+                        <div>
+                            <div style="font-weight: 600;">TikTok AI 助手</div>
+                            <div style="color: #00C853; font-size: 0.8rem;">● 在线</div>
+                        </div>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        您好！我是 TikTok 广告助手，可以帮您解答开户政策、指导准备资料、对接官方代理商。有什么可以帮您？😊
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <span style="background: white; border: 1px solid #00F2EA; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem;">开户需要什么资料？</span>
+                        <span style="background: white; border: 1px solid #00F2EA; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem;">费用是多少？</span>
+                        <span style="background: white; border: 1px solid #00F2EA; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem;">多久下户？</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Value Props -->
+    <section class="value-props">
+        <div class="value-props-grid">
+            <div class="value-prop">
+                <div class="value-prop-icon">🤖</div>
+                <h3>AI 智能引导</h3>
+                <p>问答式收集资料，无需反复沟通</p>
+            </div>
+            <div class="value-prop">
+                <div class="value-prop-icon">⚡</div>
+                <h3>5 分钟完成</h3>
+                <p>简单高效的开户流程</p>
+            </div>
+            <div class="value-prop">
+                <div class="value-prop-icon">🛡️</div>
+                <h3>安全合规</h3>
+                <p>官方认证代理商，资料加密处理</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <h2 class="section-title">服务流程</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>AI 问询</h4>
+                <p>解答问题<br>2 分钟</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>资料收集</h4>
+                <p>上传文件<br>5 分钟</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>自动整理</h4>
+                <p>邮件发送<br>即时</p>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <h4>客服跟进</h4>
+                <p>完成开户<br>24 小时</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <h2 class="section-title">常见问题</h2>
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">TikTok 广告开户需要什么资料？</div>
+                <div class="faq-answer">
+                    根据不同地区要求略有不同，基本资料包括：<br>
+                    • 营业执照（公司注册满 3 个月）<br>
+                    • 法人身份证/护照<br>
+                    • 推广网站（需包含隐私条款、联系方式）<br>
+                    • 如为海外公司，需当地办公地址证明
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">开户费用是多少？</div>
+                <div class="faq-answer">
+                    官方开户免费。通过代理商开户可能收取服务费（通常 0-3%），但可享受返点政策（3-10%，根据消耗量）。我们对接的都是官方认证一级代理商，费用透明。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">多久可以下户？</div>
+                <div class="faq-answer">
+                    资料齐全的情况下：<br>
+                    • 美区：1-3 个工作日<br>
+                    • 英区：1-2 个工作日<br>
+                    • 东南亚：当天或次日<br>
+                    如遇审核问题，客服会协助补充资料。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">中国公司可以开美区账户吗？</div>
+                <div class="faq-answer">
+                    可以！有两种方式：<br>
+                    1. 通过代理商代开（推荐新手）- 下户快、有返点、有人指导<br>
+                    2. 自行注册（适合有经验）- 账户完全自主控制，但审核较严<br>
+                    我们可以帮您对接靠谱的官方认证代理商。
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">哪些行业不能投放？</div>
+                <div class="faq-answer">
+                    禁投行业包括：违禁药品、成人用品、博彩、未经授权的品牌仿品、高风险金融产品（Crypto/贷款等）。<br>
+                    需额外资质的行业：化妆品（FDA 认证）、电子产品（CE 认证）、保健食品（第三方检测报告）。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <h2>准备好开始了吗？</h2>
+        <p>已有 1000+ 商家通过我们成功开户</p>
+        <a href="#" class="btn-primary" onclick="startChat()">💬 与 AI 助手对话</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div>
+            <a href="#policy">政策库</a>
+            <a href="#cases">案例中心</a>
+            <a href="#about">关于我们</a>
+            <a href="#contact">联系方式</a>
+        </div>
+        <div style="margin-top: 1rem;">
+            © 2026 TikTok AI 服务平台。All rights reserved.
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.8rem;">
+            <a href="#">隐私政策</a> | <a href="#">服务条款</a> | <a href="#">免责声明</a>
+        </div>
+    </footer>
+
+    <!-- Chat Button -->
+    <div class="chat-button" onclick="startChat()">
+        💬
+    </div>
+
+    <script>
+        // TODO: 替换为你的 Dify 应用 ID
+        const DIFY_APP_ID = 'your-dify-app-id';
+        
+        // TODO: 替换为你的 Formspree 表单 ID
+        const FORMSPREE_FORM_ID = 'your-formspree-id';
+        
+        function startChat() {
+            // 方法 1: 使用 Dify 嵌入（推荐）
+            // 在 Dify 控制台获取嵌入代码后替换这里
+            
+            // 方法 2: 简单弹窗（临时方案）
+            const userInput = prompt('您好！我是 TikTok 广告助手。\n\n请问有什么可以帮您？\n\n您可以问我：\n- 开户需要什么资料？\n- 费用是多少？\n- 多久可以下户？');
+            
+            if (userInput) {
+                alert('这是一个演示。\n\n实际部署时，这里会打开 AI 对话窗口。\n\n您的问题：' + userInput);
+            }
+        }
+        
+        function startOnboarding() {
+            // 跳转到资料收集表单
+            window.location.href = '/onboarding.html';
+        }
+        
+        // FAQ 展开/收起
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                if (answer.style.display === 'block') {
+                    answer.style.display = 'none';
+                } else {
+                    answer.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
