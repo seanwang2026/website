@@ -637,8 +637,14 @@
                 // Step 3: 获取消息
                 const messages = await getChatMessages(chatId, conversationId);
                 
-                // 提取 AI 回复（取最后一条有效消息）
+                // 提取 AI 回复（优先取 type="answer" 的消息）
                 if (messages.length > 0) {
+                    // 先找 type="answer" 的消息（主要回复）
+                    const answerMsg = messages.find(msg => msg.type === 'answer');
+                    if (answerMsg && answerMsg.content) {
+                        return answerMsg.content;
+                    }
+                    // 否则取最后一条有效消息
                     const lastMsg = messages[messages.length - 1];
                     return lastMsg.content;
                 }
