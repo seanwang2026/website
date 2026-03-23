@@ -301,6 +301,163 @@
             }
         }
         
+        /* Chat Window */
+        .chat-window {
+            display: none;
+            position: fixed;
+            bottom: 6rem;
+            right: 2rem;
+            width: 380px;
+            height: 550px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        
+        .chat-header-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #f9f9f9;
+        }
+        
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        
+        .chat-message.user .message-avatar {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+        }
+        
+        .message-content {
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            max-width: 75%;
+            line-height: 1.5;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chat-message.user .message-content {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+        }
+        
+        .chat-message.loading .message-content {
+            opacity: 0.7;
+        }
+        
+        .chat-input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        #chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            outline: none;
+            resize: none;
+            font-family: inherit;
+        }
+        
+        #chat-input:focus {
+            border-color: #00F2EA;
+        }
+        
+        .chat-send-btn {
+            background: linear-gradient(135deg, #00F2EA, #FE2C55);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        
+        .chat-send-btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Quick Questions */
+        .chat-quick-questions {
+            padding: 0.75rem 1rem;
+            background: white;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-question {
+            background: #f5f5f5;
+            border: 1px solid #00F2EA;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .quick-question:hover {
+            background: #e0f7f7;
+        }
+        
         /* Mobile */
         @media (max-width: 768px) {
             .hero-content {
@@ -503,22 +660,168 @@
         💬
     </div>
 
+    <!-- Chat Window -->
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <span class="chat-header-title">🤖 TikTok AI 助手</span>
+            <button class="chat-header-close" onclick="closeChat()">×</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-message bot">
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    您好！我是 TikTok 广告助手，可以帮您解答开户政策、指导准备资料、对接官方代理商。有什么可以帮您？😊
+                </div>
+            </div>
+        </div>
+        <div class="chat-quick-questions">
+            <span class="quick-question" onclick="quickAsk('开户需要什么资料？')">开户需要什么资料？</span>
+            <span class="quick-question" onclick="quickAsk('费用是多少？')">费用是多少？</span>
+            <span class="quick-question" onclick="quickAsk('多久可以下户？')">多久可以下户？</span>
+        </div>
+        <div class="chat-input-container">
+            <input 
+                type="text" 
+                id="chat-input" 
+                placeholder="输入您的问题..." 
+                onkeypress="handleKeyPress(event)"
+            >
+            <button class="chat-send-btn" onclick="handleSend()">发送</button>
+        </div>
+    </div>
+
     <script>
-        // TODO: 替换为你的 Dify 应用 ID
-        const DIFY_APP_ID = 'your-dify-app-id';
+        // 快捷提问
+        function quickAsk(question) {
+            document.getElementById('chat-input').value = question;
+            handleSend();
+        }
+        // Coze API 配置
+        const COZE_BOT_ID = '7607292705848590377';
+        const COZE_PAT_TOKEN = 'pat_Hbl6GRhdFDFMdDrOH4gWe0ZxzVoafR1Sp7taSvNwR3ek2yOgMKTCeM3dYN0bVgaA';
+        const COZE_API_URL = 'https://api.coze.cn/v1/chat';
         
-        // TODO: 替换为你的 Formspree 表单 ID
-        const FORMSPREE_FORM_ID = 'your-formspree-id';
+        // 对话历史（用于上下文）
+        let conversationId = null;
         
+        // 打开对话窗口
         function startChat() {
-            // 方法 1: 使用 Dify 嵌入（推荐）
-            // 在 Dify 控制台获取嵌入代码后替换这里
+            const chatWindow = document.getElementById('chat-window');
+            if (chatWindow) {
+                chatWindow.style.display = 'flex';
+                // 聚焦到输入框
+                setTimeout(() => {
+                    document.getElementById('chat-input').focus();
+                }, 100);
+            }
+        }
+        
+        // 关闭对话窗口
+        function closeChat() {
+            const chatWindow = document.getElementById('chat-window');
+            if (chatWindow) {
+                chatWindow.style.display = 'none';
+            }
+        }
+        
+        // 发送消息到 Coze
+        async function sendMessage(message) {
+            try {
+                const response = await fetch(COZE_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${COZE_PAT_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        bot_id: COZE_BOT_ID,
+                        user: 'website_visitor_' + Date.now(),
+                        query: message,
+                        conversation_id: conversationId,
+                        stream: false
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('API 请求失败：' + response.status);
+                }
+                
+                const data = await response.json();
+                
+                // 保存 conversation_id 用于后续对话
+                if (data.conversation_id) {
+                    conversationId = data.conversation_id;
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Coze API Error:', error);
+                throw error;
+            }
+        }
+        
+        // 添加消息到聊天窗口
+        function appendMessage(content, isUser = false) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'bot'}`;
             
-            // 方法 2: 简单弹窗（临时方案）
-            const userInput = prompt('您好！我是 TikTok 广告助手。\n\n请问有什么可以帮您？\n\n您可以问我：\n- 开户需要什么资料？\n- 费用是多少？\n- 多久可以下户？');
+            const avatar = isUser ? '👤' : '🤖';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${avatar}</div>
+                <div class="message-content">${content}</div>
+            `;
             
-            if (userInput) {
-                alert('这是一个演示。\n\n实际部署时，这里会打开 AI 对话窗口。\n\n您的问题：' + userInput);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // 处理发送
+        async function handleSend() {
+            const input = document.getElementById('chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // 添加用户消息
+            appendMessage(message, true);
+            input.value = '';
+            
+            // 显示加载中
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'chat-message bot loading';
+            loadingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">正在思考...</div>
+            `;
+            document.getElementById('chat-messages').appendChild(loadingDiv);
+            
+            try {
+                // 发送消息到 Coze
+                const data = await sendMessage(message);
+                
+                // 移除加载提示
+                loadingDiv.remove();
+                
+                // 显示 AI 回复
+                const reply = data.content || data.messages?.[0]?.content || '抱歉，我暂时无法回答这个问题。';
+                appendMessage(reply, false);
+                
+                // TODO: 异步存储对话记录到飞书表格
+                // await storeConversation(message, reply);
+                
+            } catch (error) {
+                loadingDiv.remove();
+                appendMessage('抱歉，连接失败了，请稍后再试。', false);
+                console.error('Chat Error:', error);
+            }
+        }
+        
+        // 监听回车键
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                handleSend();
             }
         }
         
