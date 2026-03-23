@@ -725,7 +725,7 @@
         }
         
         // 轮询对话状态直到完成
-        async function pollChatStatus(chatId, convId, maxAttempts = 30) {
+        async function pollChatStatus(chatId, convId, maxAttempts = 60) {
             for (let i = 0; i < maxAttempts; i++) {
                 await new Promise(resolve => setTimeout(resolve, 500)); // 等待 500ms
                 
@@ -741,16 +741,19 @@
                 const data = await response.json();
                 const status = data.data?.status;
                 
-                console.log(`轮询 ${i+1}: status=${status}`);
+                if (i % 10 === 0) {
+                    console.log(`轮询 ${i+1}: status=${status}`);
+                }
                 
                 if (status === 'completed') {
+                    console.log(`轮询 ${i+1}: 完成！`);
                     return data.data;
                 }
                 if (status === 'failed' || status === 'canceled') {
-                    throw new Error('对话处理失败');
+                    throw new Error('对话处理失败：' + status);
                 }
             }
-            throw new Error('等待超时');
+            throw new Error('等待超时（30 秒）');
         }
         
         // 获取对话消息
