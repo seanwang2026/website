@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok 广告开户 AI 助手 - 智能咨询，极速开户</title>
-    <meta name="description" content="AI 智能引导 TikTok 广告开户，在线解答政策、指导准备资料、对接官方代理商。">
+    <title>抖音广告开户 AI 助手 - 智能咨询，极速开户</title>
+    <meta name="description" content="AI 智能引导抖音广告开户，在线解答政策、指导准备资料、对接官方代理商。">
     <style>
         * {
             margin: 0;
@@ -47,6 +47,14 @@
             -webkit-text-fill-color: transparent;
         }
 
+        /* Chat Panel Full Width */
+        .chat-panel-wrapper {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+
         .nav-links {
             display: flex;
             gap: 2rem;
@@ -66,13 +74,12 @@
         /* Main Container */
         .main-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 2rem;
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 6rem 2rem 2rem;
+            padding: 4rem 2rem 2rem;
             min-height: 100vh;
-            align-items: center;
         }
 
         /* Left Content */
@@ -423,7 +430,7 @@
         <!-- Left Content -->
         <div class="left-content">
             <div class="hero-badge">🚀 官方认证代理商</div>
-            <h1>TikTok 广告开户<br>从未如此简单</h1>
+            <h1>抖音广告开户<br>从未如此简单</h1>
             <p class="hero-description">
                 AI 智能助手 24 小时在线，为您解答开户政策、指导资料准备、<br>
                 对接官方认证代理商。平均 24 小时极速审核，让您快速开启广告投放。
@@ -436,7 +443,7 @@
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">24h</div>
-                    <div class="stat-label">平均审核</div>
+                    <div class="stat-label">极速审核</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-number">7×24</div>
@@ -446,11 +453,12 @@
         </div>
 
         <!-- Chat Container -->
-        <div class="chat-container" id="chat-panel">
+        <div class="chat-panel-wrapper">
+            <div class="chat-container" id="chat-panel">
             <div class="chat-header">
                 <div class="bot-avatar">🤖</div>
                 <div class="bot-info">
-                    <h3>TikTok 广告开户助手</h3>
+                    <h3>抖音广告开户助手</h3>
                     <div class="bot-status">在线</div>
                 </div>
             </div>
@@ -459,7 +467,7 @@
                 <div class="chat-message bot">
                     <div class="message-avatar">🤖</div>
                     <div class="message-content">
-                        您好！我是 TikTok 广告开户助手，可以帮您：
+                        您好！我是抖音广告开户助手，可以帮您：
                         <br><br>
                         • 解答开户政策和流程
                         <br>
@@ -488,6 +496,8 @@
                     >
                     <button class="chat-send-btn" onclick="handleSend()" id="send-btn">发送</button>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
     </div>
